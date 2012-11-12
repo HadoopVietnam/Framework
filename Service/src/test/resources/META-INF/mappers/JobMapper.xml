@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="vn.mangtuyendung.persistence.repositories.JobRepository">
+
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    
+<!--    <select id="findBy" resultType="CrawlDomain" flushCache="false" useCache="true">
+        SELECT 
+        ID, TITLE, URL, DOMAIN, BOOST,
+        COMPANY_NAME as companyName, 
+        COMPANY_OVERVIEW as companyOverview, 
+        COMPANY_ADDRESS as companyAddress, 
+        COMPANY_RANGE as companyRange, 
+        JOB_CATEGORY as jobCategory, 
+        JOB_LOCATION as jobLocation, 
+        JOB_TIME_WORK as jobTimeWork, 
+        JOB_MEMBER_LEVEL as jobMemberLevel, 
+        JOB_SALARY as jobSalary, 
+        JOB_AGE as jobAge, 
+        JOB_SEX as jobSex, 
+        JOB_OVERVIEW as jobOverview, 
+        JOB_EDUCATION_LEVEL as jobEducationLevel, 
+        JOB_EXPERIENCE_LEVEL as jobExperienceLevel, 
+        JOB_REQUIREMENT as jobRequirement, 
+        JOB_LANGUAGE as jobLanguage, 
+        JOB_CONTACT_DETAIL as jobContactDetail, 
+        JOB_CONTACT_NAME as jobContactName, 
+        JOB_CONTACT_ADDRESS as jobContactAddress, 
+        JOB_CONTACT_PERSON as jobContactPerson, 
+        JOB_CONTACT_PHONE as jobContactPhone, 
+        JOB_CONTACT_EMAIL as jobContactEmail, 
+        JOB_EXPIRED as jobExpired
+        FROM job_crawl
+        <if test="domain != null">
+            WHERE DOMAIN = #{domain}
+        </if>
+        ORDER BY JOB_EXPIRED
+        LIMIT #{start},#{end}
+    </select>
+    
+    <select id="findById" resultType="CrawlDomain" flushCache="false" useCache="true">
+        SELECT 
+        ID, TITLE, URL, DOMAIN, BOOST,
+        COMPANY_NAME as companyName, 
+        COMPANY_OVERVIEW as companyOverview, 
+        COMPANY_ADDRESS as companyAddress, 
+        COMPANY_RANGE as companyRange, 
+        JOB_CATEGORY as jobCategory, 
+        JOB_LOCATION as jobLocation, 
+        JOB_TIME_WORK as jobTimeWork, 
+        JOB_MEMBER_LEVEL as jobMemberLevel, 
+        JOB_SALARY as jobSalary, 
+        JOB_AGE as jobAge, 
+        JOB_SEX as jobSex, 
+        JOB_OVERVIEW as jobOverview, 
+        JOB_EDUCATION_LEVEL as jobEducationLevel, 
+        JOB_EXPERIENCE_LEVEL as jobExperienceLevel, 
+        JOB_REQUIREMENT as jobRequirement, 
+        JOB_LANGUAGE as jobLanguage, 
+        JOB_CONTACT_DETAIL as jobContactDetail, 
+        JOB_CONTACT_NAME as jobContactName, 
+        JOB_CONTACT_ADDRESS as jobContactAddress, 
+        JOB_CONTACT_PERSON as jobContactPerson, 
+        JOB_CONTACT_PHONE as jobContactPhone, 
+        JOB_CONTACT_EMAIL as jobContactEmail, 
+        JOB_EXPIRED as jobExpired
+        FROM job_crawl
+        WHERE ID = #{id}
+    </select>
+    
+    <select id="countBy" resultType="long" flushCache="false" useCache="true">
+        SELECT count(*) 
+        FROM job_crawl
+        <if test="domain != null">
+            WHERE DOMAIN = #{domain}
+        </if>
+        ORDER BY JOB_EXPIRED
+    </select>-->
+    
+    <insert id="save" parameterType="JobDomain" flushCache="true">
+        INSERT INTO job_crawl
+        (ID, TITLE, URL, DOMAIN, BOOST, COMPANY_NAME, COMPANY_OVERVIEW, COMPANY_ADDRESS, COMPANY_RANGE, JOB_CATEGORY, JOB_LOCATION, JOB_TIME_WORK, JOB_MEMBER_LEVEL, JOB_SALARY, JOB_AGE, JOB_SEX, JOB_OVERVIEW, JOB_EDUCATION_LEVEL, JOB_EXPERIENCE_LEVEL, JOB_REQUIREMENT, JOB_LANGUAGE, JOB_CONTACT_DETAIL, JOB_CONTACT_NAME, JOB_CONTACT_ADDRESS, JOB_CONTACT_PERSON, JOB_CONTACT_PHONE, JOB_CONTACT_EMAIL, JOB_EXPIRED)
+        VALUES
+        (#{id},#{title},#{url},#{domain},#{boost},#{companyName},#{companyOverview},#{companyAddress},#{companyRange},#{jobCategory},#{jobLocation},#{jobTimeWork},#{jobMemberLevel},#{jobSalary},#{jobAge},#{jobSex},#{jobOverview},#{jobEducationLevel},#{jobExperienceLevel},#{jobRequirement},#{jobLanguage},#{jobContactDetail},#{jobContactName},#{jobContactAddress},#{jobContactPerson},#{jobContactPhone},#{jobContactEmail},#{expired})
+    </insert>
+</mapper>

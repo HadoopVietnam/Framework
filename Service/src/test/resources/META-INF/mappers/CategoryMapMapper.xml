@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="vn.mangtuyendung.persistence.repositories.CategoryMapRepository">
+
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    
+    <select id="findAll" resultType="CategoryMapDomain" flushCache="false" useCache="true">
+        SELECT ID, CAT, MAP, DOMAIN, CREATED
+        FROM map
+        ORDER BY #{orderBy}
+        LIMIT #{start}, #{end}
+    </select>
+    
+    <select id="findByDomainAndCategory" resultType="CategoryMapDomain" flushCache="false" useCache="true">
+        SELECT ID, CAT, MAP, DOMAIN, CREATED
+        FROM map
+        WHERE  
+        DOMAIN = #{domain}
+        AND CAT = #{cat}
+    </select>
+    
+    <select id="findByDomain" resultType="CategoryMapDomain" flushCache="false" useCache="true">
+        SELECT ID, CAT, MAP, DOMAIN, CREATED
+        FROM map
+        WHERE DOMAIN = #{domain}
+        ORDER BY #{orderBy}
+        LIMIT #{start}, #{end}
+    </select>
+    
+    <select id="findById" resultType="CategoryMapDomain" flushCache="false" useCache="true">
+        SELECT ID, CAT, MAP, DOMAIN, CREATED
+        FROM map
+        WHERE ID = #{id}
+    </select>
+    
+    <select id="countBy" resultType="long" flushCache="false" useCache="true">
+        SELECT count(*) 
+        FROM map
+        WHERE  1 = 1
+        <if test="domain != null">
+            AND DOMAIN = #{domain}
+        </if>
+        <if test="cat != null">
+            AND CAT = #{cat}
+        </if>
+        <if test="map != null">
+            AND MAP = #{map}
+        </if>
+    </select>
+    
+    <insert id="save" parameterType="CategoryMapDomain" flushCache="true">
+        INSERT INTO map
+        (CAT, MAP, DOMAIN)
+        VALUES
+        (#{cat},#{map},#{domain})
+    </insert>
+    
+    <update id="update" flushCache="true">
+        UPDATE map
+        SET 
+        DOMAIN = #{domain},
+        CAT = #{cat},
+        MAP = #{map}
+        WHERE ID = #{id}
+    </update>
+</mapper>

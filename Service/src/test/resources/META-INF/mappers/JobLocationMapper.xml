@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="vn.mangtuyendung.persistence.repositories.JobLocationRepository">
+
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
+    <select id="findAll" resultType="JobLocationDomain" flushCache="false" useCache="true">
+        SELECT ID, NAME, URL, ENABLED, SORT 
+        FROM job_location
+        WHERE ENABLED = true
+        ORDER BY URL
+    </select>
+    
+    <select id="findById" resultType="JobLocationDomain" flushCache="false" useCache="true">
+        SELECT ID, NAME, URL, ENABLED, SORT 
+        FROM job_location
+        WHERE ID = #{id}
+    </select>
+    
+    <select id="findByUrl" resultType="JobLocationDomain" flushCache="false" useCache="true">
+        SELECT ID, NAME, URL, ENABLED, SORT 
+        FROM job_location
+        WHERE URL = #{url}
+    </select>
+    
+    <insert id="save" parameterType="JobLocationDomain" flushCache="true">
+        INSERT INTO job_location
+        (NAME, URL)
+        VALUES
+        (#{name},#{url})
+    </insert>
+    
+    <update id="update" flushCache="true">
+        UPDATE job_location
+        SET 
+        NAME = #{name},
+        URL = #{url},
+        SORT = #{sort},
+        ENABLED = #{enabled}
+        WHERE ID = #{id}
+    </update>
+</mapper>
