@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/task 
+                http://www.springframework.org/schema/task/spring-task-3.1.xsd
+		http://www.springframework.org/schema/context 
+                http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <context:property-placeholder location="classpath*:META-INF/spring/*.properties" />
+
+    <!--<import resource="../../applicationContext-mybatis.xml" />-->
+    <!--<import resource="applicationContext-memcached.xml" />-->
+    <!--<import resource="applicationContext-rabbitmq.xml" />-->
+    <!--<import resource="applicationContext-service.xml" />-->
+    <!-- ************************* -->
+    <!-- TaskHandler configuration -->
+    <!-- ************************* -->
+
+    <!--<bean id="applicationContextHolder" class="org.eurekastreams.server.service.actions.strategies.ApplicationContextHolder" />-->
+
+    <!-- Executes the action in-line -->
+    <bean id="executingTaskHandler" class="com.hadoopvietnam.commons.task.ExecutingTaskHandler">
+        <constructor-arg ref="asyncActionController" />
+    </bean>
+
+    <!-- Does not execute the action, only logs -->
+    <bean id="nullTaskHandler" class="com.hadoopvietnam.commons.task.NullTaskHandler" />
+    
+    <alias alias="taskHandler" name="executingTaskHandler" />
+    
+    <bean id="asyncActionController" class="com.hadoopvietnam.commons.server.async.AsyncActionController">
+        <constructor-arg ref="transactionManager"/>
+    </bean>
+    
+</beans>
