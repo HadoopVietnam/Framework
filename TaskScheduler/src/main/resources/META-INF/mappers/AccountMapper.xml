@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hadoopvietnam.persistence.repositories.AccountRepository">
+
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    
+    <select id="findAll" resultType="AccountDomain" flushCache="false" useCache="true">
+        SELECT
+        ID,
+        USERNAME,
+        PASSWORD,
+        EMAIL,
+        MOBILE,
+        ENABLED,
+        FAILED_LOGIN_COUNT as failedLoginCount,
+        LAST_FAILED_LOGIN_TIME as lastFailedLoginTime,
+        LAST_HOST_ADDRESS as lastHostAddress,
+        LAST_LOGIN_TIME as lastLoginTime,
+        LAST_PASSWORD_CHANGE_TIME as lastPasswordChangeTime,
+        EXPIRATION_DATE as expirationDate,
+        MAIN_PROFILE as mainProfile,
+        CREATED
+        <!--a.AUTHORITY-->
+        FROM users
+        <!--left outer join authorities a on a.USERNAME = u.USERNAME-->
+        <!--WHERE u.ENABLED = 1-->
+        ORDER BY USERNAME
+    </select>
+    
+    <select id="findByLimit" resultType="AccountDomain" flushCache="false" useCache="true">
+        SELECT
+        ID,
+        USERNAME,
+        PASSWORD,
+        EMAIL,
+        MOBILE,
+        ENABLED,
+        FAILED_LOGIN_COUNT as failedLoginCount,
+        LAST_FAILED_LOGIN_TIME as lastFailedLoginTime,
+        LAST_HOST_ADDRESS as lastHostAddress,
+        LAST_LOGIN_TIME as lastLoginTime,
+        LAST_PASSWORD_CHANGE_TIME as lastPasswordChangeTime,
+        EXPIRATION_DATE as expirationDate,
+        MAIN_PROFILE as mainProfile,
+        CREATED
+        FROM users 
+        ORDER BY #{orderBy}
+        LIMIT #{start}, #{end}
+    </select>
+    
+    <select id="findByUsernameAndPassword" parameterType="string" resultType="AccountDomain" flushCache="false" useCache="true">
+        SELECT
+        ID,
+        USERNAME,
+        PASSWORD,
+        EMAIL,
+        MOBILE,
+        ENABLED,
+        FAILED_LOGIN_COUNT as failedLoginCount,
+        LAST_FAILED_LOGIN_TIME as lastFailedLoginTime,
+        LAST_HOST_ADDRESS as lastHostAddress,
+        LAST_LOGIN_TIME as lastLoginTime,
+        LAST_PASSWORD_CHANGE_TIME as lastPasswordChangeTime,
+        EXPIRATION_DATE as expirationDate,
+        MAIN_PROFILE as mainProfile,
+        CREATED
+        FROM users
+        WHERE USERNAME = #{username}
+        AND PASSWORD = #{password}
+        <!--AND ENABLED = 1-->
+        LIMIT 0, 1
+    </select>
+    
+    <select id="findByUsername" parameterType="string" resultType="AccountDomain" flushCache="false" useCache="true">
+        SELECT
+        ID,
+        USERNAME,
+        PASSWORD,
+        EMAIL,
+        MOBILE,
+        ENABLED,
+        FAILED_LOGIN_COUNT as failedLoginCount,
+        LAST_FAILED_LOGIN_TIME as lastFailedLoginTime,
+        LAST_HOST_ADDRESS as lastHostAddress,
+        LAST_LOGIN_TIME as lastLoginTime,
+        LAST_PASSWORD_CHANGE_TIME as lastPasswordChangeTime,
+        EXPIRATION_DATE as expirationDate,
+        MAIN_PROFILE as mainProfile,
+        CREATED
+        FROM users
+        WHERE USERNAME = #{username}
+        LIMIT 0, 1
+    </select>
+    
+    <select id="findByEmail" parameterType="String" resultType="AccountDomain" flushCache="false" useCache="true">
+        SELECT
+        ID,
+        USERNAME,
+        PASSWORD,
+        EMAIL,
+        MOBILE,
+        ENABLED,
+        FAILED_LOGIN_COUNT as failedLoginCount,
+        LAST_FAILED_LOGIN_TIME as lastFailedLoginTime,
+        LAST_HOST_ADDRESS as lastHostAddress,
+        LAST_LOGIN_TIME as lastLoginTime,
+        LAST_PASSWORD_CHANGE_TIME as lastPasswordChangeTime,
+        EXPIRATION_DATE as expirationDate,
+        MAIN_PROFILE as mainProfile,
+        CREATED
+        FROM users
+        WHERE EMAIL = #{email}
+        LIMIT 0, 1
+    </select>
+    
+    <select id="findByMobile" parameterType="String" resultType="AccountDomain" flushCache="false" useCache="true">
+        SELECT
+        ID,
+        USERNAME,
+        PASSWORD,
+        EMAIL,
+        MOBILE,
+        ENABLED,
+        FAILED_LOGIN_COUNT as failedLoginCount,
+        LAST_FAILED_LOGIN_TIME as lastFailedLoginTime,
+        LAST_HOST_ADDRESS as lastHostAddress,
+        LAST_LOGIN_TIME as lastLoginTime,
+        LAST_PASSWORD_CHANGE_TIME as lastPasswordChangeTime,
+        EXPIRATION_DATE as expirationDate,
+        MAIN_PROFILE as mainProfile,
+        CREATED
+        FROM users
+        WHERE MOBILE = #{mobile}
+        LIMIT 0, 1
+    </select>
+    
+    <select id="findByUsernameOrEmail" parameterType="String" resultType="AccountDomain" flushCache="false" useCache="true">
+        SELECT
+        ID,
+        USERNAME,
+        PASSWORD,
+        EMAIL,
+        MOBILE,
+        ENABLED,
+        FAILED_LOGIN_COUNT as failedLoginCount,
+        LAST_FAILED_LOGIN_TIME as lastFailedLoginTime,
+        LAST_HOST_ADDRESS as lastHostAddress,
+        LAST_LOGIN_TIME as lastLoginTime,
+        LAST_PASSWORD_CHANGE_TIME as lastPasswordChangeTime,
+        EXPIRATION_DATE as expirationDate,
+        MAIN_PROFILE as mainProfile,
+        CREATED
+        FROM users
+        WHERE USERNAME = #{username}
+        OR EMAIL = #{email}
+        LIMIT 0, 1
+    </select>
+    
+    <select id="findById" parameterType="long" resultType="AccountDomain" flushCache="false" useCache="true">
+        SELECT
+        ID,
+        USERNAME,
+        PASSWORD,
+        EMAIL,
+        MOBILE,
+        ENABLED,
+        FAILED_LOGIN_COUNT as failedLoginCount,
+        LAST_FAILED_LOGIN_TIME as lastFailedLoginTime,
+        LAST_HOST_ADDRESS as lastHostAddress,
+        LAST_LOGIN_TIME as lastLoginTime,
+        LAST_PASSWORD_CHANGE_TIME as lastPasswordChangeTime,
+        EXPIRATION_DATE as expirationDate,
+        MAIN_PROFILE as mainProfile,
+        CREATED
+        FROM users
+        WHERE ID = #{id}
+        LIMIT 0, 1
+    </select>
+    
+    <select id="findByProfileId" parameterType="long" resultType="AccountDomain" flushCache="false" useCache="true">
+        SELECT
+        ID,
+        USERNAME,
+        PASSWORD,
+        EMAIL,
+        MOBILE,
+        ENABLED,
+        FAILED_LOGIN_COUNT as failedLoginCount,
+        LAST_FAILED_LOGIN_TIME as lastFailedLoginTime,
+        LAST_HOST_ADDRESS as lastHostAddress,
+        LAST_LOGIN_TIME as lastLoginTime,
+        LAST_PASSWORD_CHANGE_TIME as lastPasswordChangeTime,
+        EXPIRATION_DATE as expirationDate,
+        MAIN_PROFILE as mainProfile,
+        CREATED
+        FROM users
+        WHERE ID = #{id}
+        LIMIT 0, 1
+    </select>
+    
+    <select id="findByEnable" parameterType="boolean" resultType="AccountDomain" flushCache="false" useCache="true">
+        SELECT
+        ID,
+        USERNAME,
+        PASSWORD,
+        EMAIL,
+        MOBILE,
+        ENABLED,
+        FAILED_LOGIN_COUNT as failedLoginCount,
+        LAST_FAILED_LOGIN_TIME as lastFailedLoginTime,
+        LAST_HOST_ADDRESS as lastHostAddress,
+        LAST_LOGIN_TIME as lastLoginTime,
+        LAST_PASSWORD_CHANGE_TIME as lastPasswordChangeTime,
+        EXPIRATION_DATE as expirationDate,
+        MAIN_PROFILE as mainProfile,
+        CREATED
+        FROM users
+        WHERE ENABLED = #{enabled}
+        ORDER BY USERNAME
+        LIMIT #{start}, #{end}
+    </select>
+    
+    <select id="count" resultType="long" flushCache="false" useCache="true">
+        SELECT count(*) FROM users 
+    </select>
+    
+    <insert id="save" parameterType="AccountDomain" flushCache="true">
+        INSERT INTO users
+        (ID, USERNAME, PASSWORD, EMAIL, MOBILE, ENABLED)
+        VALUES
+        (#{id}, #{username}, #{password}, #{email}, #{mobile}, #{enabled})
+    </insert>
+    
+    <update id="active" parameterType="string" flushCache="true">
+        UPDATE users SET ENABLED = 1 WHERE USERNAME = #{username}
+    </update>
+    
+    <update id="block" parameterType="string" flushCache="true">
+        UPDATE users SET ENABLED = 0 WHERE USERNAME = #{username}
+    </update>
+    
+    <update id="login" parameterType="AccountDomain" flushCache="true">
+        UPDATE users 
+        SET 
+        LAST_HOST_ADDRESS = #{lastHostAddress},
+        LAST_LOGIN_TIME = #{lastLoginTime}
+        WHERE USERNAME = #{username}
+    </update>
+    
+    <update id="changePassword" parameterType="AccountDomain" flushCache="true">
+        UPDATE users 
+        SET
+        PASSWORD = #{password},
+        LAST_PASSWORD_CHANGE_TIME = #{lastPasswordChangeTime}
+        WHERE USERNAME = #{username}
+    </update>
+    
+    <update id="mainProfile" parameterType="AccountDomain" flushCache="true">
+        UPDATE users 
+        SET
+        MAIN_PROFILE = #{mainProfile}
+        WHERE USERNAME = #{username}
+    </update>
+    
+    <delete id="delete" parameterType="string" flushCache="true">
+        DELETE FROM users WHERE USERNAME = #{username}
+    </delete>
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:amqp="http://www.springframework.org/schema/integration/amqp"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:redis="http://www.springframework.org/schema/data/redis"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:stream="http://www.springframework.org/schema/integration/stream"
+       xmlns:cloud="http://schema.cloudfoundry.org/spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/integration/amqp 
+                http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+		http://www.springframework.org/schema/integration 
+                http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/rabbit 
+                http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd
+		http://www.springframework.org/schema/data/mongo 
+                http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
+                http://www.springframework.org/schema/integration/stream 
+                http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+		http://www.springframework.org/schema/beans 
+                http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <!--  intercept messages on these channels while still allowing them to continue -->
+    <int:wire-tap channel="logger" pattern="doTasks"/>
+    <int:logging-channel-adapter id="logger" log-full-message="true" level="WARN"/>
+
+    <!--  To receive AMQP Messages from a Queue, configure an inbound-channel-adapter  -->
+    <amqp:inbound-channel-adapter 
+        queue-names="new-tasks" 
+        channel="jsonTasks"
+        error-handler="cwAmqpErrorHandler" 
+        connection-factory="rabbitConnectionFactory" 
+        acknowledge-mode="AUTO" />
+        
+    <int:json-to-object-transformer 
+        input-channel="jsonTasks" 
+        output-channel="doTasks" 
+        type="com.hadoopvietnam.commons.actions.UserActionRequest" />
+        
+    <int:channel id="doTasks"/>
+    
+    <int:channel id="loggingTasks"/>
+    
+    <int:chain input-channel="jsonTasks" output-channel="doTasks">
+        <int:json-to-object-transformer type="com.hadoopvietnam.commons.actions.UserActionRequest"/>
+        <int:service-activator method="handleTask" ref="taskHandler"/>
+        <int:object-to-json-transformer />
+    </int:chain>
+        
+    <stream:stdout-channel-adapter id="consoleOut" channel="jsonTasks" append-newline="true"/>
+        
+    <int:poller default="true" fixed-rate="10"/>
+        
+    <bean id="cwAmqpErrorHandler"
+          class="com.hadoopvietnam.commons.exceptions.AmqpErrorHandler"/>
+    
+</beans>

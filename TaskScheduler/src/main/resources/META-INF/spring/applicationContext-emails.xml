@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:amqp="http://www.springframework.org/schema/integration/amqp"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:redis="http://www.springframework.org/schema/data/redis"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:stream="http://www.springframework.org/schema/integration/stream"
+       xmlns:cloud="http://schema.cloudfoundry.org/spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/integration/amqp 
+                http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+		http://www.springframework.org/schema/integration 
+                http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/rabbit 
+                http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd
+		http://www.springframework.org/schema/data/mongo 
+                http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
+                http://www.springframework.org/schema/integration/stream 
+                http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+		http://www.springframework.org/schema/beans 
+                http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <!-- Configure Velocity for sending e-mail -->
+    <bean id="velocityEngine"
+          class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityPropertiesMap">
+            <map>
+                <entry key="resource.loader">
+                    <value>ds</value>
+                </entry>
+                <entry key="ds.resource.loader.instance">
+                    <ref bean="templateLoader"/>
+                </entry>
+                <entry key="ds.resource.loader.resource.table">
+                    <value>email_templates</value>
+                </entry>
+                <entry key="ds.resource.loader.resource.keycolumn">
+                    <value>id</value>
+                </entry>
+                <entry key="ds.resource.loader.resource.templatecolumn">
+                    <value>body</value>
+                </entry>
+                <entry key="ds.resource.loader.resource.timestampcolumn">
+                    <value>created</value>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!-- Velocity Database Template Loader -->
+    <bean id="templateLoader"
+          class="org.apache.velocity.runtime.resource.loader.DataSourceResourceLoader">
+        <property name="dataSource">
+            <ref local="dataSource"/>
+        </property>
+    </bean>
+    
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="email-smtp.us-east-1.amazonaws.com" />
+        <property name="port" value="465" />
+        <property name="protocol" value="smtps" />
+        <property name="username" value="AKIAJRPXZ453JSB5IVNQ" />
+        <property name="password" value="AtrexvQ++K0RdZXXBYpn0fnH2Kk1HDC4pIiinft+EMYh" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtps.auth">true</prop>
+                <prop key="mail.smtp.ssl.enable">true</prop>
+                <prop key="mail.transport.protocol">smtps</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="emailerFactory"
+          class="com.hadoopvietnam.commons.emails.EmailerFactory">
+        <constructor-arg ref="velocityEngine" />
+        <constructor-arg ref="mailSender"/>
+        <constructor-arg value="support@mangtuyendung.vn" />
+    </bean>
+</beans>
