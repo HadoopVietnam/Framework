@@ -22,11 +22,18 @@ import com.hadoopvietnam.commons.actions.TaskHandlerExecutionStrategy;
 import com.hadoopvietnam.commons.actions.UserActionRequest;
 import com.hadoopvietnam.commons.actions.context.ActionContext;
 import com.hadoopvietnam.commons.actions.context.TaskHandlerActionContext;
+import com.hadoopvietnam.commons.crypt.J2MECrypto;
 import com.hadoopvietnam.persistence.domain.AccountDomain;
 import com.hadoopvietnam.service.AccountService;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 
 /**
  *
@@ -46,6 +53,10 @@ public class CreatePersonExecution implements TaskHandlerExecutionStrategy<Actio
      * Person mapper.
      */
     private final AccountService accountService;
+    /**
+     * Crypto.
+     */
+    private J2MECrypto crypto = new J2MECrypto("LetfyActionCrypto".getBytes());
 
     /**
      * Constructor.
@@ -71,13 +82,18 @@ public class CreatePersonExecution implements TaskHandlerExecutionStrategy<Actio
         String sRequest = inActionContext.getActionContext().getParams().toString();
         CreatePersonRequest createRequest = gson.fromJson(sRequest, CreatePersonRequest.class);
         AccountDomain inPerson = createRequest.getPerson();
+        Date timestamp = new Date();//DateUtils.addDays(new Date(), 7);
+        inPerson.setExpirationDate(timestamp);
+        String code = inPerson.getId() + " " + inPerson.getEmail() + " " + timestamp.getTime();
+        String accessKey = new String(Base64.encodeBase64(crypto.encrypt((code).getBytes())));
+        inPerson.setActiveKey(accessKey);
         logger.info("Save account " + inPerson.getUsername() + " to database");
         if (accountService.save(inPerson)) // Send email notification if necessary
         {
             if (createRequest.getSendEmail() && sendWelcomeEmailAction != null && !sendWelcomeEmailAction.isEmpty()) {
                 UserActionRequest request = new UserActionRequest();
                 request.setActionKey(sendWelcomeEmailAction);
-                String activeLink = "";
+                String activeLink = "http://mangtuyendung.vn/thanh-vien/kich-hoat-tai-khoan?key=" + accessKey + "&sign=" + DigestUtils.md5Hex(code);
                 SendWelcomeEmailRequest sendWelcomeEmailRequest = new SendWelcomeEmailRequest(inPerson.getEmail(), inPerson.getUsername(), activeLink);
                 request.setParams(gson.toJson(sendWelcomeEmailRequest));
                 inActionContext.getUserActionRequests().add(request);

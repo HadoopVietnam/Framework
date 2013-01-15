@@ -15,6 +15,9 @@
  */
 package com.hadoopvietnam.commons.crypt;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
+
 /**
  *
  * @author Hadoop Vietnam <admin@hadoopvietnam.com>
@@ -42,11 +45,11 @@ public class J2MECrypto {
         buffer[0] = clear.length;
         pack(clear, buffer, 1);
         brew(buffer);
-        return Base64.encode(unpack(buffer, 0, buffer.length * 4));
+        return Base64.encodeBase64(unpack(buffer, 0, buffer.length * 4));
     }
 
     public byte[] decrypt(byte[] crypt) {
-        crypt = Base64.decode(new String(crypt));
+        crypt = Base64.decodeBase64(new String(crypt));
         int[] buffer = new int[crypt.length / 4];
         pack(crypt, buffer, 0);
         unbrew(buffer);
@@ -122,5 +125,15 @@ public class J2MECrypto {
             }
         }
         return dest;
+    }
+
+    public static void main(String[] args) {
+        J2MECrypto crypto = new J2MECrypto("LetfyActionCrypto".getBytes());
+        String code = System.currentTimeMillis() + " " + "tk1cntt@gmail.com" + " " + System.currentTimeMillis();
+        String encode = new String(Base64.encodeBase64(crypto.encrypt((code).getBytes())));
+        System.out.println(encode);
+        String decode = new String(crypto.decrypt(Base64.decodeBase64(encode.getBytes())));
+        System.out.println(decode);
+        System.out.println(DigestUtils.md5Hex(code));
     }
 }

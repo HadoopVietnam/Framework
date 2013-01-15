@@ -43,7 +43,7 @@ public class SendEmailExecutionTest {
 
     @Test
     public void testSendMail() throws Exception {
-        String emailAddress = "tk1cntt@gmail.com";
+        String emailAddress = "tuanta2@peacesoft.net";
         Map model = new HashMap();
         model.put("username", "tuanta");
         model.put("emailAddress", emailAddress);

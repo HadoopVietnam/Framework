@@ -16,7 +16,6 @@
 package com.hadoopvietnam.action.execution.emails;
 
 import com.google.gson.Gson;
-import com.hadoopvietnam.action.request.CreatePersonRequest;
 import com.hadoopvietnam.action.request.emails.SendWelcomeEmailRequest;
 import com.hadoopvietnam.commons.actions.ExecutionStrategy;
 import com.hadoopvietnam.commons.actions.context.ActionContext;
@@ -74,10 +73,11 @@ public class SendWelcomeEmailExecution implements ExecutionStrategy<ActionContex
         String sRequest = inActionContext.getParams().toString();
         SendWelcomeEmailRequest request = gson.fromJson(sRequest, SendWelcomeEmailRequest.class);
         String emailAddress = request.getEmailAddress();
-        String accountId = request.getAccountId();
         Map model = new HashMap();
         model.put("emailAddress", emailAddress);
-        model.put("username", accountId);
+        model.put("username", request.getAccountId());
+        model.put("activeLink", request.getActiveLink());
+        
         String text = VelocityEngineUtils.mergeTemplateIntoString(
                 emailerFactory.getVelocityEngine(), "welcome.vm", model);
 

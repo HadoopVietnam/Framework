@@ -45,6 +45,7 @@ public class CreatePersonExecutionTest {
     @Test
     public void testSetup() throws Exception {
         AccountDomain accountDomain = new AccountDomain();
+        accountDomain.setId(System.currentTimeMillis());
         accountDomain.setUsername(System.currentTimeMillis() + "");
         accountDomain.setPassword(System.currentTimeMillis() + "");
         accountDomain.setEmail("tk1cntt@gmail.com");

@@ -52,9 +52,9 @@ public class SendWelcomeEmailRequest implements Serializable {
      * @param inAccountId the account id.
      */
     public SendWelcomeEmailRequest(final String inEmailAddress, final String inAccountId, final String inActiveLink) {
-        setEmailAddress(inEmailAddress);
-        setAccountId(inAccountId);
-        setActiveLink(inActiveLink);
+        this.emailAddress = inEmailAddress;
+        this.accountId = inAccountId;
+        this.activeLink = inActiveLink;
     }
 
     /**
