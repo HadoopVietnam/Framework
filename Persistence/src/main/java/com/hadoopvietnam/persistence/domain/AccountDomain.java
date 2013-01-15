@@ -26,7 +26,6 @@ public class AccountDomain
     private String username;
     private String password;
     private String email;
-    private String mobile;
     private boolean enabled;
     private String screenName;
     private int failedLoginCount;
@@ -35,6 +34,7 @@ public class AccountDomain
     private Date lastLoginTime;
     private Date lastPasswordChangeTime;
     private Date expirationDate;
+    private String activeKey;
     private String CSRFToken;
     private List<RoleDomain> roles;
     private boolean isLogin;
@@ -73,14 +73,6 @@ public class AccountDomain
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getMobile() {
-        return this.mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
     }
 
     public boolean isEnabled() {
@@ -153,6 +145,14 @@ public class AccountDomain
 
     public Date getExpirationDate() {
         return this.expirationDate;
+    }
+
+    public String getActiveKey() {
+        return activeKey;
+    }
+
+    public void setActiveKey(String activeKey) {
+        this.activeKey = activeKey;
     }
 
     public boolean isLocked() {
