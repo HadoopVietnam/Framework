@@ -58,7 +58,7 @@ public class StatisticService {
     public boolean save(HttpServletRequest request) {
         try {
             if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Log http request from id " + request.getRemoteAddr());
+                this.logger.debug("Log http request from ip " + request.getRemoteAddr());
             }
             String myUserAgent = request.getHeader("User-Agent");
             UserAgent userAgent = UserAgent.parseUserAgentString(myUserAgent);

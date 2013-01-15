@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 
 public class AccountService extends AbstractCachedService<AccountDomain> {
+    private static final int MAX_TIME_LIST_CACHE = 5;
 
     private final Logger logger = LoggerFactory.getLogger(AccountService.class);
     @Autowired
@@ -94,7 +95,7 @@ public class AccountService extends AbstractCachedService<AccountDomain> {
             if (account == null) {
                 this.logger.debug("Find list account from " + start + " to " + end + " in database.");
                 account = this.repository.findByLimit(orderBy, start, end);
-                addToList(account, CacheKeys.ACCOUNT_LIMIT + start + end, 180);
+                addToList(account, CacheKeys.ACCOUNT_LIMIT + start + end, MAX_TIME_LIST_CACHE);
             }
         } catch (Exception ex) {
             this.logger.error("Find list account error: " + ex, ex);
@@ -114,7 +115,7 @@ public class AccountService extends AbstractCachedService<AccountDomain> {
             if (account == null) {
                 this.logger.debug("Find list block account from " + start + " to " + end + " in database.");
                 account = this.repository.findByLimit("username", start, end);
-                addToList(account, CacheKeys.ACCOUNT_BLOCK + start + end, 180);
+                addToList(account, CacheKeys.ACCOUNT_BLOCK + start + end, MAX_TIME_LIST_CACHE);
             }
         } catch (Exception ex) {
             this.logger.error("Find list block account error: " + ex, ex);
@@ -134,7 +135,7 @@ public class AccountService extends AbstractCachedService<AccountDomain> {
             if (account == null) {
                 this.logger.debug("Find list active account from " + start + " to " + end + " in database.");
                 account = this.repository.findByLimit("username", start, end);
-                addToList(account, CacheKeys.ACCOUNT_ACTIVE + start + end, 180);
+                addToList(account, CacheKeys.ACCOUNT_ACTIVE + start + end, MAX_TIME_LIST_CACHE);
             }
         } catch (Exception ex) {
             this.logger.error("Find list active account error: " + ex, ex);
@@ -240,7 +241,9 @@ public class AccountService extends AbstractCachedService<AccountDomain> {
             this.repository.save(account);
 
             this.logger.debug("Save account " + account.toString() + " to cache");
+            //Add to cache.
             addToObject(account, CacheKeys.ACCOUNT_ID + account.getUsername());
+            clearCache();
         } catch (DuplicateKeyException dkex) {
             this.logger.warn("Username " + account.toString() + " duplicate.");
             return false;
