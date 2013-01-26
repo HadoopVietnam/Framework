@@ -21,7 +21,7 @@
         <repository>
             <id>jenkins-maven-release</id>
             <name>Jenkins Maven Release Repository</name>
-            <url>http://localhost:8081/plugin/repository/everything/</url>
+            <url>http://localhost:18080/plugin/repository/everything/</url>
         </repository>
         <repository>
             <id>spring-maven-release</id>
